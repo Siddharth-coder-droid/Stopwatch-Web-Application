@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .stopwatch {
+            text-align: center;
+            position: relative;
+        }
+
+        #display {
+            font-size: 6em;
+            border: 5px solid;
+            border-radius: 50%;
+            padding: 30px;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-color: #007bff;
+            color: #007bff;
+            background-color: #fff;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .dark-theme {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-theme #display {
+            border-color: #ff9800;
+            color: #ff9800;
+            background-color: #444;
+        }
+
+        .light-theme {
+            background-color: #f0f0f0;
+            color: #000;
+        }
+
+        .light-theme #display {
+            border-color: #007bff;
+            color: #007bff;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch">
+        <div id="display">00:00:00</div>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+        <button id="theme-toggle">Switch to Dark Theme</button>
+    </div>
+    <script>
+        let startTime, updatedTime, difference, tInterval;
+        let running = false;
+        const display = document.getElementById('display');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const resetButton = document.getElementById('reset');
+        const themeToggleButton = document.getElementById('theme-toggle');
+        let isDarkTheme = false;
+
+        function startTimer() {
+            if (!running) {
+                running = true;
+                startTime = new Date().getTime();
+                tInterval = setInterval(updateTime, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (running) {
+                running = false;
+                clearInterval(tInterval);
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            display.innerHTML = "00:00:00";
+        }
+
+        function updateTime() {
+            if (running) {
+                updatedTime = new Date().getTime();
+                difference = updatedTime - startTime;
+
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                display.innerHTML = 
+                    (hours < 10 ? '0' : '') + hours + ':' + 
+                    (minutes < 10 ? '0' : '') + minutes + ':' + 
+                    (seconds < 10 ? '0' : '') + seconds;
+            }
+        }
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            document.body.className = isDarkTheme ? 'dark-theme' : 'light-theme';
+            themeToggleButton.textContent = isDarkTheme ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+        }
+
+        startButton.addEventListener('click', startTimer);
+        stopButton.addEventListener('click', stopTimer);
+        resetButton.addEventListener('click', resetTimer);
+        themeToggleButton.addEventListener('click', toggleTheme);
+    </script>
+</body>
+</html>
